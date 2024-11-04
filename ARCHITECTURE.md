@@ -4,219 +4,246 @@
 
 El microservicio de **Pricing** gestiona los precios de un catálogo, genera políticas de descuentos, maneja precios especiales, cupones y descuentos, y permite consultar precios para el proceso de compras. También notifica cambios de precios de forma asíncrona a otros servicios, como **Stats**.
 
+## Casos de Uso
+
+### 1. Mantener Precios del Catálogo
+- **Actor:** Administrador del sistema.
+- **Descripción:** Permitir al administrador agregar, actualizar y eliminar precios de productos en el catálogo.
+
+### 2. Generar Políticas de Descuentos
+- **Actor:** Administrador del sistema.
+- **Descripción:** Permitir la creación, actualización y eliminación de políticas de descuentos que se aplican a productos o categorías específicas.
+
+### 3. Manejar Precios Especiales y Cupones
+- **Actor:** Cliente.
+- **Descripción:** Permitir a los clientes aplicar cupones y obtener precios especiales al momento de la compra.
+
+### 4. Consultar Precios para el Proceso de Compras
+- **Actor:** Cliente.
+- **Descripción:** Permitir a los clientes consultar precios actuales de productos durante el proceso de compra.
+
+### 5. Notificar Nuevos Precios
+- **Actor:** Sistema de estadísticas.
+- **Descripción:** Notificar de forma asíncrona a otros sistemas sobre cambios en los precios para su análisis y uso en reportes.
+
 ## Modelo de Datos
 
-### Price
-```json
-{
-	"id": string,
-	"productId": string,
-	"basePrice": number,
-	"discount": number (optional),
-	"specialPrice": number (optional),
-	"finalPrice": number,
-	"currency": string,
-	"createdAt": number (timestamp),
-	"updatedAt": number (timestamp)
-}
-```
+1. **Product**
+   - `id`: string (Unique identifier for the product)
+   - `name`: string (Name of the product)
+   - `description`: string (Description of the product)
+   - `price`: number (Current price of the product)
+   - `category`: string (Category of the product)
+   - `special_price`: number (Special price, if applicable)
 
-### Discount Policy
-```json
-{
-	"id": string,
-	"policyName": string,
-	"description": string,
-	"discountPercentage": number,
-	"active": boolean,
-	"validFrom": number (timestamp),
-	"validUntil": number (timestamp)
-}
-```
+2. **Discount**
+   - `id`: string (Unique identifier for the discount)
+   - `name`: string (Name of the discount)
+   - `type`: string (Type of discount: percentage, fixed, etc.)
+   - `value`: number (Value of the discount)
+   - `active`: boolean (Indicates if the discount is active)
+   - `start_date`: date (Start date of the discount)
+   - `end_date`: date (End date of the discount)
+   - `product_id`: string (ID of the associated product)
 
-### Coupon
-```json
-{
-	"id": string,
-	"code": string,
-	"discountPercentage": number,
-	"expirationDate": number (timestamp),
-	"appliesTo": [ "category" | "product" ]
-}
-```
+3. **Coupon**
+   - `id`: string (Unique identifier for the coupon)
+   - `code`: string (Coupon code)
+   - `discount_id`: string (ID of the associated discount)
+   - `active`: boolean (Indicates if the coupon is active)
+   - `start_date`: date (Start date of the coupon)
+   - `end_date`: date (End date of the coupon)
+
 
 ## API
 
-### Crear Precio
 
-`POST /pricing`
+### Consultar Precio de Producto
 
-Permite agregar un nuevo precio para un producto.
+`GET /api/prices/{product_id}`
 
-#### Body
-```json
-{
-	"productId": string,
-	"basePrice": number,
-	"currency": string
-}
-```
-
-#### Descripción:
-- `productId`: ID del producto al que se le asigna el precio.
-- `basePrice`: Precio base del producto.
-- `currency`: Moneda en la que está expresado el precio (por ejemplo, USD, EUR).
-
-#### Respuesta
-```json
-{
-	"message": "Price created successfully",
-	"priceId": string
-}
-```
+Devuelve el precio actual de un producto específico.
 
 #### Headers
 | Cabecera               | Contenido           |
 |------------------------|---------------------|
 | `Authorization: Bearer xxx` | Token en formato JWT |
 
-### Consultar Precio de Producto
-
-`GET /pricing/:productId`
-
-Devuelve el precio actual de un producto específico.
-
 #### Respuesta
 ```json
 {
-	"productId": string,
-	"basePrice": number,
-	"discount": number,
-	"specialPrice": number,
-	"finalPrice": number,
-	"currency": string
+    "id": "123",
+    "name": "Product A",
+    "price": 100.00,
+    "special_price": null,
+    "discounts": []
 }
 ```
 
 #### Errores
 - Devuelve `404` si el producto no tiene un precio registrado.
 
-### Modificar Precio
+---
 
-`PUT /pricing/:id`
+### Crear Precio de Producto
 
-Permite modificar el precio base, precio especial o descuento de un producto.
+`POST /api/prices`
 
-#### Body
+Crea el precio de un producto.
+
+#### Cuerpo de Solicitud
 ```json
 {
-	"basePrice": number (optional),
-	"specialPrice": number (optional),
-	"discount": number (optional),
-	"currency": string
+    "product_id": "123",
+    "price": 100.00,
+    "special_price": 90.00
 }
 ```
 
 #### Respuesta
 ```json
 {
-	"message": "Price updated successfully",
-	"priceId": string
+    "message": "Price updated successfully",
+    "product_id": "123"
 }
 ```
 
-#### Headers
-| Cabecera               | Contenido           |
-|------------------------|---------------------|
-| `Authorization: Bearer xxx` | Token en formato JWT |
+---
+
+### Actualizar Precio de Producto
+
+`PATCH /api/prices/{product_id}`
+
+Actualiza el precio de un producto específico.
+
+#### Cuerpo de Solicitud
+```json
+{
+    "price": 95.00,
+    "special_price": 85.00
+}
+```
+
+#### Respuesta
+```json
+{
+    "message": "Price updated successfully",
+    "product_id": "123"
+}
+```
+#### Errores
+- Devuelve `404` si el producto no tiene un precio registrado.
+---
+
+### Eliminar Precio de Producto
+
+`DELETE /api/prices/{product_id}`
+
+Elimina el precio de un producto específico.
+
+#### Respuesta
+```json
+{
+    "message": "Price deleted successfully",
+    "product_id": "123"
+}
+```
+
+---
 
 ### Crear Política de Descuento
 
-`POST /pricing/policy`
+`POST /api/discounts`
 
-Permite crear una política de descuentos global para productos o categorías.
+Crea una nueva política de descuento.
 
-#### Body
+#### Cuerpo de Solicitud
 ```json
 {
-	"policyName": string,
-	"description": string,
-	"discountPercentage": number,
-	"validFrom": number (timestamp),
-	"validUntil": number (timestamp)
+    "name": "Black Friday Discount",
+    "type": "percentage",
+    "value": 20,
+    "active": true,
+    "start_date": "2024-11-01T00:00:00Z",
+    "end_date": "2024-11-30T23:59:59Z",
+    "product_ids": ["123", "456", "789"]
 }
 ```
 
 #### Respuesta
 ```json
 {
-	"message": "Discount policy created successfully",
-	"policyId": string
+    "message": "Discount created successfully",
+    "discount_id": "456"
 }
 ```
 
-#### Headers
-| Cabecera               | Contenido           |
-|------------------------|---------------------|
-| `Authorization: Bearer xxx` | Token en formato JWT |
+---
+### Actualizar Política de Descuento
 
-### Aplicar Cupón de Descuento
+`PATCH /api/discounts/{discount_id}`
 
-`POST /pricing/coupon`
+Crea una nueva política de descuento.
 
-Permite aplicar un cupón a un producto o categoría.
-
-#### Body
+#### Cuerpo de Solicitud
 ```json
 {
-	"code": string,
-	"productId": string,
-	"categoryId": string (optional)
+    "name": "Black Friday Discount",
+    "type": "percentage",
+    "value": 20,
+    "active": true,
+    "start_date": "2024-11-01T00:00:00Z",
+    "end_date": "2024-11-30T23:59:59Z",
+    "product_ids": ["123", "456", "789"]
 }
 ```
 
 #### Respuesta
 ```json
 {
-	"message": "Coupon applied successfully",
-	"discountApplied": number
+    "message": "Discount created successfully",
+    "discount_id": "456"
 }
 ```
 
-#### Headers
-| Cabecera               | Contenido           |
-|------------------------|---------------------|
-| `Authorization: Bearer xxx` | Token en formato JWT |
+---
+### Aplicar Cupón
 
-### Consultar Precios para Proceso de Compras
+`POST /api/coupons/apply`
 
-`GET /pricing/shopping`
+Aplica un cupón a un array de productos.
 
-Este endpoint devuelve una lista de precios para varios productos, con sus descuentos aplicados, si corresponde, para ser utilizada en el proceso de compras.
-
-#### Body
+#### Cuerpo de Solicitud
 ```json
 {
-	"productIds": [string]
+    "code": "BLACKFRIDAY",
+    "product_ids": ["123", "456", "789"]
 }
 ```
 
 #### Respuesta
 ```json
-[
-	{
-		"productId": string,
-		"finalPrice": number,
-		"discount": number,
-		"currency": string
-	}
-]
+{
+    "message": "Coupon applied successfully",
+    "applied_discount": 20,
+    "final_prices": [
+        {
+            "product_id": "123",
+            "final_price": 80.00
+        },
+        {
+            "product_id": "456",
+            "final_price": 64.00
+        },
+        {
+            "product_id": "789",
+            "final_price": 72.00
+        }
+    ]
+}
 ```
 
-#### Headers
-| Cabecera               | Contenido           |
-|------------------------|---------------------|
-| `Authorization: Bearer xxx` | Token en formato JWT |
+---
 
 ## Interfaz RabbitMQ para Notificaciones de Precios
 
@@ -263,45 +290,3 @@ Este servicio se suscribe a un canal de RabbitMQ para notificar de forma asíncr
 	"productId": string
 }
 ```
-
-## API Adicional
-
-### Consultar Políticas de Descuento
-
-`GET /pricing/policy`
-
-Devuelve una lista de políticas de descuento activas.
-
-#### Respuesta
-```json
-[
-	{
-		"id": string,
-		"policyName": string,
-		"description": string,
-		"discountPercentage": number,
-		"validFrom": number,
-		"validUntil": number
-	}
-]
-```
-
-### Consultar Cupón
-
-`GET /pricing/coupon/:code`
-
-Devuelve los detalles de un cupón por su código.
-
-#### Respuesta
-```json
-{
-	"id": string,
-	"code": string,
-	"discountPercentage": number,
-	"expirationDate": number,
-	"appliesTo": [ "category" | "product" ]
-}
-```
-
-#### Errores
-- Devuelve `404` si el cupón no existe.
