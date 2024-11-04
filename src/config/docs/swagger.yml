@@ -1,0 +1,188 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  termsOfService: 'http://swagger.io/terms/'
+  title: Pricing-Api
+  license:
+    name: ISC
+  contact:
+    name: Carlos Moreno
+    email: mail@mail.com
+paths:
+  '/test':
+    get:
+      tags:
+        - Deploy
+      summary: Endpoint to deploy service
+      description: Endpoint to deploy.
+      operationId: deploy
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+servers:
+  - url: '{protocol}://{environment}/api/v1'
+    description: Local
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      environment:
+        enum:
+          - localhost:8080
+        default: localhost:8080
+components:
+  responses:
+    Success:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
+    Unauthorized:
+      description: Access token is missing or is invalid
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+  schemas:
+    Timestamp:
+      type: object
+      properties:
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+    TimestampMongo:
+      type: object
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: number
+          example: 9
+        page:
+          type: number
+          example: 1
+        page_size:
+          type: number
+          example: 10
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorItem'
+        status:
+          type: number
+          example: 400
+    ErrorItem:
+      type: object
+      properties:
+        key:
+          type: string
+          example: app.login.invalidPassword
+        message:
+          type: string
+          example: Invalid user or password
+    TestResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: API running!
+        status:
+          type: number
+          example: 200
+    StandardResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Successful operation
+        status:
+          type: number
+          example: 200
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+    page:
+      name: page
+      in: query
+      description: Page number
+      schema:
+        type: number
+        example: 1
+    page_size:
+      name: page_size
+      in: query
+      description: Limits the number of results
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        example: 10
+    sort:
+      name: sort
+      in: query
+      description: Attribute to sort by
+      schema:
+        type: string
+        example: created_at
+    sort_dir:
+      name: sort_dir
+      in: query
+      description: Sorting direction
+      schema:
+        type: string
+        enum:
+          - ASC
+          - DESC
+        example: ASC
+    search:
+      name: search
+      in: query
+      schema:
+        type: string

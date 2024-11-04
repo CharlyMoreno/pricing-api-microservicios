@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  pricing-api:
+    image: pricing-api:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongo:27017/pricing_db
+    depends_on:
+      - mongo
+    networks:
+      - pricing-network
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - pricing-network
+
+volumes:
+  mongo-data:
+
+networks:
+  pricing-network:

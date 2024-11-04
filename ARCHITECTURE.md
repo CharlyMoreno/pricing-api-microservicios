@@ -91,6 +91,11 @@ Devuelve el precio actual de un producto específico.
 
 Crea el precio de un producto.
 
+#### Headers
+| Cabecera               | Contenido           |
+|------------------------|---------------------|
+| `Authorization: Bearer xxx` | Token en formato JWT |
+
 #### Cuerpo de Solicitud
 ```json
 {
@@ -115,6 +120,11 @@ Crea el precio de un producto.
 `PATCH /api/prices/{product_id}`
 
 Actualiza el precio de un producto específico.
+
+#### Headers
+| Cabecera               | Contenido           |
+|------------------------|---------------------|
+| `Authorization: Bearer xxx` | Token en formato JWT |
 
 #### Cuerpo de Solicitud
 ```json
@@ -141,6 +151,11 @@ Actualiza el precio de un producto específico.
 
 Elimina el precio de un producto específico.
 
+#### Headers
+| Cabecera               | Contenido           |
+|------------------------|---------------------|
+| `Authorization: Bearer xxx` | Token en formato JWT |
+
 #### Respuesta
 ```json
 {
@@ -156,6 +171,11 @@ Elimina el precio de un producto específico.
 `POST /api/discounts`
 
 Crea una nueva política de descuento.
+
+#### Headers
+| Cabecera               | Contenido           |
+|------------------------|---------------------|
+| `Authorization: Bearer xxx` | Token en formato JWT |
 
 #### Cuerpo de Solicitud
 ```json
@@ -185,6 +205,11 @@ Crea una nueva política de descuento.
 
 Crea una nueva política de descuento.
 
+#### Headers
+| Cabecera               | Contenido           |
+|------------------------|---------------------|
+| `Authorization: Bearer xxx` | Token en formato JWT |
+
 #### Cuerpo de Solicitud
 ```json
 {
@@ -212,6 +237,11 @@ Crea una nueva política de descuento.
 `POST /api/coupons/apply`
 
 Aplica un cupón a un array de productos.
+
+#### Headers
+| Cabecera               | Contenido           |
+|------------------------|---------------------|
+| `Authorization: Bearer xxx` | Token en formato JWT |
 
 #### Cuerpo de Solicitud
 ```json
