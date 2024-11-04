@@ -1,8 +1,8 @@
-import { CustomError } from "@config/errors/error.model";
+import { CustomError } from '@config/errors/error.model';
+import modelProduct from 'src/models/product';
 
 class TestService {
   async testEndpoint() {
-    throw new CustomError("Mensaje",400)
     return Promise.resolve({ message: 'Test OK', status: 200 });
   }
 }

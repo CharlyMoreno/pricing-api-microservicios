@@ -13,4 +13,5 @@ export default {
   DIR_ERRORS: 'src/config/errors/error.yml',
   SECRET_KEY: process.env.SECRET_KEY || 'secret',
   API_KEY: process.env.API_KEY,
+  MONGO_URL: process.env.MONGO_URL,
 };
