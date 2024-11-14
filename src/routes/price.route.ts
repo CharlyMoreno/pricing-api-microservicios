@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import priceService from '@services/price.service';
 import { RequestCreatePrice, RequestGetDeletePrice, RequestUpdatePrice } from '@dtos/prices.dto';
+import { authMiddleware } from '@middlewares/auth.middleware';
 
 class PriceRoute {
   public router = Router();
@@ -10,8 +11,8 @@ class PriceRoute {
   }
 
   createRoutes(): void {
-    this.router.post('/prices', this.createUpdatePrice.bind(this));
-    this.router.get('/prices/:article_id', this.getPrice.bind(this));
+    this.router.post('/prices', authMiddleware, this.createUpdatePrice.bind(this));
+    this.router.get('/prices/:article_id', authMiddleware, this.getPrice.bind(this));
   }
 
   private createUpdatePrice(req: Request, res: Response, next: NextFunction) {

@@ -12,6 +12,10 @@ Bienvenido al proyecto **Pricing-Api**.
 
 Para obtener más información sobre la arquitectura del proyecto, consulta el archivo [ARCHITECTURE.md](./ARCHITECTURE.md).
 
+## Documentación API
+
+Para ver la documentacion de la API, consulta el archivo [README-API.md](./README-API.md).
+
 ## Requisitos
 
 Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
@@ -73,7 +77,7 @@ Para ejecutar el proyecto en modo Docker, sigue estos pasos:
 
 3. **Accede a la API:**
 
-   Una vez que los contenedores estén en ejecución, puedes acceder a la API en `http://localhost:3000`. Asegúrate de que el puerto 3000 no esté en uso por otra aplicación.
+   Una vez que los contenedores estén en ejecución, puedes acceder a la API en `http://localhost:3023`. Asegúrate de que el puerto 3023 no esté en uso por otra aplicación.
 
 ## Uso del Proyecto
 

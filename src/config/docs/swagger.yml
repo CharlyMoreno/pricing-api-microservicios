@@ -27,6 +27,8 @@ paths:
         - Price
       summary: Crear Precio de Producto
       description: Crea el precio de un producto.
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -50,18 +52,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  article_id:
-                    type: string
+                $ref: '#/components/schemas/Price'
   /prices/{article_id}:
     get:
       tags:
         - Price
       summary: Consultar Precio de Producto
       description: Devuelve el precio actual de un producto específico.
+      security:
+        - bearerAuth: []
       parameters:
         - name: article_id
           in: path
@@ -97,6 +96,9 @@ paths:
         - Discount
       summary: Obtener todos los descuentos
       description: Obtener todos los descuentos.
+      security:
+        - bearerAuth: []
+
       responses:
         '200':
           description: Descuento creado correctamente.
@@ -112,6 +114,9 @@ paths:
         - Discount
       summary: Crear Política de Descuento
       description: Crea una nueva política de descuento.
+      security:
+        - bearerAuth: []
+
       requestBody:
         content:
           application/json:
@@ -155,6 +160,9 @@ paths:
         - Discount
       summary: Actualizar Política de Descuento
       description: Actualiza una nueva política de descuento.
+      security:
+        - bearerAuth: []
+
       parameters:
         - name: discount_id
           in: path
@@ -206,6 +214,9 @@ paths:
         - Coupons
       summary: Obtener todos los cupones
       description: Obtener todos los cupones.
+      security:
+        - bearerAuth: []
+
       responses:
         '200':
           description: Cupones.
@@ -221,6 +232,8 @@ paths:
         - Coupons
       summary: Crear Cupón
       description: Crea un nuevo cupón.
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -269,6 +282,9 @@ paths:
         - Coupons
       summary: Modificar Cupón
       description: Modifica un cupón existente.
+      security:
+        - bearerAuth: []
+
       parameters:
         - name: coupon_id
           in: path
@@ -326,6 +342,8 @@ paths:
         - Coupons
       summary: Aplicar Cupón
       description: Aplica un cupón a un conjunto de productos.
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -416,15 +434,42 @@ components:
     Price:
       type: object
       properties:
-        id:
+        _id:
           type: string
+          example: "67366854ec21ade4efab8202"
+          description: Identificador único del precio
         article_id:
           type: string
+          example: "2"
+          description: ID del producto asociado a este precio
         price:
           type: number
-          format: float
-        category:
+          example: 9890
+          description: Precio del producto en el período especificado
+        start_date:
           type: string
+          format: date-time
+          example: "2024-11-10T21:07:49.125Z"
+          description: Fecha de inicio de este precio
+        end_date:
+          type: string
+          format: date-time
+          example: "2024-11-16T21:07:49.125Z"
+          description: Fecha de fin de este precio
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-11-14T21:15:00.294Z"
+          description: Fecha de creación del documento
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-11-14T21:15:00.294Z"
+          description: Fecha de última actualización del documento
+        __v:
+          type: integer
+          example: 0
+          description: Versión del documento para control de versiones
     Discount:
       type: object
       properties:
