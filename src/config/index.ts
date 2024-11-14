@@ -16,4 +16,6 @@ export default {
   MONGO_URL: process.env.MONGO_URL,
   SECURITY_URL: process.env.SECURITY_URL || '',
   CURRENT_USER: process.env.CURRENT_USER || '',
+  RABBIT_URL: process.env.RABBIT_URL || '',
+  QUEUE_STATS: process.env.QUEUE_STATS || '',
 };

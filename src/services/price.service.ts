@@ -3,6 +3,7 @@ import { Price } from '@models/entities/price';
 import priceRepository from '@repositories/price.repository';
 import { UpdatePrice } from '@dtos/prices.dto';
 import discountService from './discount.service';
+import { Rabbit } from 'src/rabbitmq/rabbit.server';
 
 class PriceService {
   async getPriceByProduct(productId: string) {
@@ -22,7 +23,9 @@ class PriceService {
     if (!payload.price) {
       throw new CustomError('Price is required', 400);
     }
-    return priceRepository.create(payload);
+    const priceCreated = await priceRepository.create(payload);
+    await Rabbit.getInstance().sendMessage(priceCreated);
+    return priceCreated;
   }
 
   async updatePrice(productId: string, payload: UpdatePrice) {
@@ -30,7 +33,9 @@ class PriceService {
     if (!price) {
       throw new CustomError('Product not found', 404);
     }
-    return priceRepository.updateByProductId(productId, payload);
+    const priceUpdated = await priceRepository.updateByProductId(productId, payload);
+    await Rabbit.getInstance().sendMessage(priceUpdated);
+    return priceUpdated;
   }
 
   async deletePrice(productId: string) {

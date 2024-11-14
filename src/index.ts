@@ -9,11 +9,14 @@ import process from 'process';
 import util from 'util';
 import logger from './utils/logger';
 import app from './app';
+import { Rabbit } from './rabbitmq/rabbit.server';
 
 const port = config.PORT;
 app.set('port', port);
 
 const server = http.createServer(app);
+
+Rabbit.getInstance();
 
 const onError = (error: any) => {
   if (error.syscall !== 'listen') {
