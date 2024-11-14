@@ -33,13 +33,17 @@ paths:
             schema:
               type: object
               properties:
-                product_id:
+                article_id:
                   type: string
                 price:
                   type: number
                   format: float
-                category:
+                start_date:
                   type: string
+                  format: date-time
+                end_date:
+                  type: string
+                  format: date-time
       responses:
         '200':
           description: Precio actualizado correctamente.
@@ -50,16 +54,16 @@ paths:
                 properties:
                   message:
                     type: string
-                  product_id:
+                  article_id:
                     type: string
-  /prices/{product_id}:
+  /prices/{article_id}:
     get:
       tags:
         - Price
       summary: Consultar Precio de Producto
       description: Devuelve el precio actual de un producto específico.
       parameters:
-        - name: product_id
+        - name: article_id
           in: path
           required: true
           schema:
@@ -86,69 +90,6 @@ paths:
                       type: string
         '404':
           description: Producto no encontrado.
-
-    put:
-      tags:
-        - Price
-      summary: Actualizar Precio de Producto
-      description: Actualiza el precio de un producto específico.
-      parameters:
-        - name: product_id
-          in: path
-          required: true
-          schema:
-            type: string
-          description: ID del producto cuyo precio se desea actualizar.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                price:
-                  type: number
-                  format: float
-                category:
-                  type: string
-      responses:
-        '200':
-          description: Precio actualizado correctamente.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  product_id:
-                    type: string
-        '404':
-          description: Producto no encontrado.
-
-    delete:
-      tags:
-        - Price
-      summary: Eliminar Precio de Producto
-      description: Elimina el precio de un producto específico.
-      parameters:
-        - name: product_id
-          in: path
-          required: true
-          schema:
-            type: string
-          description: ID del producto cuyo precio se desea eliminar.
-      responses:
-        '200':
-          description: Precio eliminado correctamente.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  product_id:
-                    type: string
 
   /discounts:
     get:
@@ -192,7 +133,7 @@ paths:
                 end_date:
                   type: string
                   format: date-time
-                product_ids:
+                article_ids:
                   type: array
                   items:
                     type: string
@@ -242,7 +183,7 @@ paths:
                 end_date:
                   type: string
                   format: date-time
-                product_ids:
+                article_ids:
                   type: array
                   items:
                     type: string
@@ -393,7 +334,7 @@ paths:
               properties:
                 code:
                   type: string
-                product_ids:
+                article_ids:
                   type: array
                   items:
                     type: string
@@ -415,7 +356,7 @@ paths:
                     items:
                       type: object
                       properties:
-                        product_id:
+                        article_id:
                           type: string
                         final_price:
                           type: number
@@ -477,7 +418,7 @@ components:
       properties:
         id:
           type: string
-        product_id:
+        article_id:
           type: string
         price:
           type: number
@@ -504,7 +445,7 @@ components:
         end_date:
           type: string
           format: date-time
-        product_ids:
+        article_ids:
           type: array
           items:
             type: string

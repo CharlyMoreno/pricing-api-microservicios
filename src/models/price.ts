@@ -3,7 +3,7 @@ import { PriceDocument } from './entities/price';
 
 export const PriceSchema = new Schema(
   {
-    product_id: {
+    article_id: {
       type: String,
       required: true,
     },
@@ -11,10 +11,14 @@ export const PriceSchema = new Schema(
       type: Number,
       required: true,
     },
-    category: {
-      type: String,
-      required: false,
-    }
+    start_date: {
+      type: Date,
+      required: true,
+    },
+    end_date: {
+      type: Date,
+      required: true,
+    },
   },
   {
     collection: 'prices',

@@ -16,10 +16,6 @@ export const DiscountSchema = new Schema<DiscountDocument>(
       type: Number,
       required: true,
     },
-    active: {
-      type: Boolean,
-      required: true,
-    },
     start_date: {
       type: Date,
       required: true,
@@ -28,7 +24,7 @@ export const DiscountSchema = new Schema<DiscountDocument>(
       type: Date,
       required: true,
     },
-    product_ids: {
+    article_ids: {
       type: [String], 
       required: true,
     },

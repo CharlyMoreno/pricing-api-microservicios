@@ -12,4 +12,4 @@ export interface RequestUpdateDiscount extends Request {
   body: UpdateDiscount;
 }
 
-export interface UpdateDiscount extends Partial<Omit<Discount, 'product_id'>> {}
+export interface UpdateDiscount extends Partial<Omit<Discount, 'article_id'>> {}

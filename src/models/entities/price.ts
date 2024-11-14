@@ -4,12 +4,13 @@ import { Discount } from './discount';
 export interface PriceDocument extends Price, Document {}
 
 export interface Price {
-  product_id: string;
+  article_id: string;
   price: number;
-  category: string;
+  start_date: Date;
+  end_date: Date;  
 }
 
 export interface PriceWithSpecialPrice extends Price {
-  special_price?: number;
+  price_with_discount?: number;
   discounts?: Discount[];
 }

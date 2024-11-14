@@ -26,7 +26,7 @@ El microservicio de **Pricing** gestiona los precios de un catálogo, genera pol
 
 1. **Price**
    - `id`: string - Identificador único del precio
-   - `product_id`: string - ID del producto asociado
+   - `article_id`: string - ID del producto asociado
    - `price`: number - Precio actual del producto
    - `category`: string - Categoría del producto
 
@@ -38,7 +38,7 @@ El microservicio de **Pricing** gestiona los precios de un catálogo, genera pol
    - `active`: boolean - Indica si el descuento está activo
    - `start_date`: date - Fecha de inicio del descuento
    - `end_date`: date - Fecha de finalización del descuento
-   - `product_ids`: array of strings - IDs de los productos asociados
+   - `article_ids`: array of strings - IDs de los productos asociados
 
 3. **Coupon**
    - `id`: string - Identificador único del cupón
@@ -61,7 +61,7 @@ El microservicio de **Pricing** gestiona los precios de un catálogo, genera pol
 ## API
 ### Consultar Precio de Producto
 
-`GET /api/prices/{product_id}`
+`GET /api/prices/{article_id}`
 
 Devuelve el precio actual de un producto específico.
 
@@ -99,7 +99,7 @@ Crea el precio de un producto.
 #### Cuerpo de Solicitud
 ```json
 {
-    "product_id": "123",
+    "article_id": "123",
     "price": 100.00,
     "special_price": 90.00
 }
@@ -109,7 +109,7 @@ Crea el precio de un producto.
 ```json
 {
     "message": "Price updated successfully",
-    "product_id": "123"
+    "article_id": "123"
 }
 ```
 
@@ -117,7 +117,7 @@ Crea el precio de un producto.
 
 ### Actualizar Precio de Producto
 
-`PUT /api/prices/{product_id}`
+`PUT /api/prices/{article_id}`
 
 Actualiza el precio de un producto específico.
 
@@ -138,7 +138,7 @@ Actualiza el precio de un producto específico.
 ```json
 {
     "message": "Price updated successfully",
-    "product_id": "123"
+    "article_id": "123"
 }
 ```
 #### Errores
@@ -147,7 +147,7 @@ Actualiza el precio de un producto específico.
 
 ### Eliminar Precio de Producto
 
-`DELETE /api/prices/{product_id}`
+`DELETE /api/prices/{article_id}`
 
 Elimina el precio de un producto específico.
 
@@ -160,7 +160,7 @@ Elimina el precio de un producto específico.
 ```json
 {
     "message": "Price deleted successfully",
-    "product_id": "123"
+    "article_id": "123"
 }
 ```
 
@@ -186,7 +186,7 @@ Crea una nueva política de descuento.
     "active": true,
     "start_date": "2024-11-01T00:00:00Z",
     "end_date": "2024-11-30T23:59:59Z",
-    "product_ids": ["123", "456", "789"]
+    "article_ids": ["123", "456", "789"]
 }
 ```
 
@@ -219,7 +219,7 @@ Actualiza una nueva política de descuento.
     "active": true,
     "start_date": "2024-11-01T00:00:00Z",
     "end_date": "2024-11-30T23:59:59Z",
-    "product_ids": ["123", "456", "789"]
+    "article_ids": ["123", "456", "789"]
 }
 ```
 
@@ -333,7 +333,7 @@ Aplica un cupón a un array de productos.
 ```json
 {
     "code": "BLACKFRIDAY",
-    "product_ids": ["123", "456", "789"]
+    "article_ids": ["123", "456", "789"]
 }
 ```
 
@@ -344,15 +344,15 @@ Aplica un cupón a un array de productos.
     "applied_discount": 20,
     "final_prices": [
         {
-            "product_id": "123",
+            "article_id": "123",
             "final_price": 80.00
         },
         {
-            "product_id": "456",
+            "article_id": "456",
             "final_price": 64.00
         },
         {
-            "product_id": "789",
+            "article_id": "789",
             "final_price": 72.00
         }
     ]
@@ -370,7 +370,7 @@ Este servicio se suscribe a un canal de RabbitMQ para notificar de forma asíncr
 #### Mensaje de Notificación
 ```json
 {
-	"productId": string,
+	"articleId": string,
 	"basePrice": number,
 	"finalPrice": number,
 	"currency": string,
@@ -379,7 +379,7 @@ Este servicio se suscribe a un canal de RabbitMQ para notificar de forma asíncr
 ```
 
 #### Descripción:
-- `productId`: ID del producto cuyo precio ha sido modificado.
+- `articleId`: ID del producto cuyo precio ha sido modificado.
 - `basePrice`: Precio base del producto.
 - `finalPrice`: Precio final con descuentos aplicados.
 - `currency`: Moneda en la que está expresado el precio.
@@ -394,7 +394,7 @@ Este servicio se suscribe a un canal de RabbitMQ para notificar de forma asíncr
 ```json
 {
 	"status": "notified",
-	"productId": string
+	"articleId": string
 }
 ```
 
@@ -403,6 +403,6 @@ Este servicio se suscribe a un canal de RabbitMQ para notificar de forma asíncr
 {
 	"status": "failed",
 	"error": string,
-	"productId": string
+	"articleId": string
 }
 ```

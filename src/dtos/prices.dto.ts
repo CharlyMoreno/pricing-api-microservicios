@@ -7,15 +7,15 @@ export interface RequestCreatePrice extends Request {
 
 export interface RequestUpdatePrice extends Request {
   params: {
-    product_id: string;
+    article_id: string;
   };
   body: UpdatePrice;
 }
 
 export interface RequestGetDeletePrice extends Request {
   params: {
-    product_id: string;
+    article_id: string;
   };
 }
 
-export interface UpdatePrice extends Partial<Omit<Price, 'product_id'>> {}
+export interface UpdatePrice extends Partial<Omit<Price, 'article_id'>> {}
