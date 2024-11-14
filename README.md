@@ -12,6 +12,10 @@ Bienvenido al proyecto **Pricing-Api**.
 
 Para obtener más información sobre la arquitectura del proyecto, consulta el archivo [ARCHITECTURE.md](./ARCHITECTURE.md).
 
+## Documentación API
+
+Para ver la documentacion de la API, consulta el archivo [README-API.md](./README-API.md).
+
 ## Requisitos
 
 Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
