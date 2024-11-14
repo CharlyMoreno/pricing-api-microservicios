@@ -1,9 +1,14 @@
+import { TypeDiscount } from '@dtos/enum/type_discount.enum';
 import { Document } from 'mongoose';
 
-export interface Coupon extends Document {
-  id: string;
+export interface CouponDocument extends Coupon, Document {}
+export interface Coupon {
   code: string;
-  discount_id: string;
+  discount_type: TypeDiscount;
+  discount_value?: number;
+  applicable_products?: string[];
+  minimum_purchase?: number;
+  uses_limit: number;
   active: boolean;
   start_date: Date;
   end_date: Date;

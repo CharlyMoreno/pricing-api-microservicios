@@ -84,6 +84,8 @@
       "@validations/*": ["src/validations/*"],
       "@repositories/*": ["src/repositories/*"],
       "@middlewares/*": ["src/middlewares/*"],
+      "@models/*": ["src/models/*"],
+      "@dtos/*": ["src/dtos/*"],
       "@rabbit/*":["src/rabbit/*"]
     },
     "useUnknownInCatchVariables": false

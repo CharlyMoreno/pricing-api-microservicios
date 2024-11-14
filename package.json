@@ -21,6 +21,7 @@
   },
   "_moduleAliases": {
     "@services": "src/services",
+    "@models": "src/models",
     "@utils": "src/utils",
     "@config": "src/config",
     "@routes": "src/routes",
@@ -29,6 +30,7 @@
     "@security": "src/security",
     "@graphql": "src/graphql",
     "@validations": "src/validations",
+    "@dtos": "src/dtos",
     "@repositories": "src/repositories",
     "@middlewares": "src/middlewares"
   },

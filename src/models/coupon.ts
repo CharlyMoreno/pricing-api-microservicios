@@ -1,19 +1,31 @@
 import { model, Schema } from 'mongoose';
-import { Coupon } from './entities/coupon';
+import { CouponDocument } from './entities/coupon';
 
-export const CouponSchema = new Schema(
+export const CouponSchema = new Schema<CouponDocument>(
   {
-    id: {
-      type: String,
-      unique: true,
-      required: true,
-    },
     code: {
       type: String,
       required: true,
     },
-    discount_id: {
+    discount_type: {
       type: String,
+      required: true,
+      enum: ['PERCENTAGE', 'FIXED'],
+    },
+    discount_value: {
+      type: Number,
+      required: false,
+    },
+    applicable_products: {
+      type: [String],
+      required: false,
+    },
+    minimum_purchase: {
+      type: Number,
+      required: false,
+    },
+    uses_limit: {
+      type: Number,
       required: true,
     },
     active: {
@@ -29,8 +41,11 @@ export const CouponSchema = new Schema(
       required: true,
     },
   },
-  { collection: 'coupons' }
+  {
+    collection: 'coupons',
+    timestamps: true,
+  }
 );
 
-const modelCoupon = model<Coupon>('Coupon', CouponSchema);
-export default modelCoupon;
+const CouponModel = model<CouponDocument>('Coupon', CouponSchema);
+export default CouponModel;

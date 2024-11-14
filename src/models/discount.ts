@@ -1,13 +1,8 @@
 import { model, Schema } from 'mongoose';
-import { Discount } from './entities/discount';
+import { DiscountDocument } from './entities/discount';
 
-export const DiscountSchema = new Schema(
+export const DiscountSchema = new Schema<DiscountDocument>(
   {
-    id: {
-      type: String,
-      unique: true,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -15,6 +10,7 @@ export const DiscountSchema = new Schema(
     type: {
       type: String,
       required: true,
+      enum: ['PERCENTAGE', 'FIXED'],
     },
     value: {
       type: Number,
@@ -32,13 +28,16 @@ export const DiscountSchema = new Schema(
       type: Date,
       required: true,
     },
-    product_id: {
-      type: String,
+    product_ids: {
+      type: [String], 
       required: true,
     },
   },
-  { collection: 'discounts' }
+  {
+    collection: 'discounts',
+    timestamps: true, 
+  }
 );
 
-const modelDiscount = model<Discount>('Discount', DiscountSchema);
-export default modelDiscount;
+const DiscountModel = model<DiscountDocument>('Discount', DiscountSchema);
+export default DiscountModel;

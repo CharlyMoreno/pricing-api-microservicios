@@ -14,4 +14,6 @@ export default {
   SECRET_KEY: process.env.SECRET_KEY || 'secret',
   API_KEY: process.env.API_KEY,
   MONGO_URL: process.env.MONGO_URL,
+  SECURITY_URL: process.env.SECURITY_URL || '',
+  CURRENT_USER: process.env.CURRENT_USER || '',
 };

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import testService from '@services/test.service';
+import { authMiddleware } from '@middlewares/auth.middleware';
 
 class TestRoute {
   public router = Router();
@@ -9,7 +10,7 @@ class TestRoute {
   }
 
   createRoutes(): void {
-    this.router.get('/test', this.handleTest.bind(this));
+    this.router.get('/test', authMiddleware, this.handleTest.bind(this));
   }
 
   private handleTest(req: Request, res: Response, next: NextFunction) {

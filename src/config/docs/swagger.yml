@@ -1,20 +1,16 @@
 openapi: 3.0.0
 info:
-  version: '1.0.0'
-  termsOfService: 'http://swagger.io/terms/'
-  title: Pricing-Api
-  license:
-    name: ISC
-  contact:
-    name: Carlos Moreno
-    email: mail@mail.com
+  title: Pricing API
+  version: 1.0.0
+  description: |
+    El microservicio de **Pricing** gestiona los precios de un catálogo, genera políticas de descuentos, maneja precios especiales, cupones y descuentos, y permite consultar precios para el proceso de compras. También notifica cambios de precios de forma asíncrona a otros servicios, como **Stats**.
 paths:
   '/test':
     get:
       tags:
         - Deploy
-      summary: Endpoint to deploy service
-      description: Endpoint to deploy.
+      summary: Endpoint para testear funcionamiento de api.
+      description: Endpoint para testear funcionamiento de api..
       operationId: deploy
       responses:
         '200':
@@ -25,6 +21,405 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /prices:
+    post:
+      tags:
+        - Price
+      summary: Crear Precio de Producto
+      description: Crea el precio de un producto.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                category:
+                  type: string
+      responses:
+        '200':
+          description: Precio actualizado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  product_id:
+                    type: string
+  /prices/{product_id}:
+    get:
+      tags:
+        - Price
+      summary: Consultar Precio de Producto
+      description: Devuelve el precio actual de un producto específico.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID del producto cuyo precio se consulta.
+      responses:
+        '200':
+          description: Precio del producto encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  price:
+                    type: number
+                    format: float
+                  discounts:
+                    type: array
+                    items:
+                      type: string
+        '404':
+          description: Producto no encontrado.
+
+    put:
+      tags:
+        - Price
+      summary: Actualizar Precio de Producto
+      description: Actualiza el precio de un producto específico.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID del producto cuyo precio se desea actualizar.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                price:
+                  type: number
+                  format: float
+                category:
+                  type: string
+      responses:
+        '200':
+          description: Precio actualizado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  product_id:
+                    type: string
+        '404':
+          description: Producto no encontrado.
+
+    delete:
+      tags:
+        - Price
+      summary: Eliminar Precio de Producto
+      description: Elimina el precio de un producto específico.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID del producto cuyo precio se desea eliminar.
+      responses:
+        '200':
+          description: Precio eliminado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  product_id:
+                    type: string
+
+  /discounts:
+    get:
+      tags:
+        - Discount
+      summary: Obtener todos los descuentos
+      description: Obtener todos los descuentos.
+      responses:
+        '200':
+          description: Descuento creado correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type:
+                  $ref: '#/components/schemas/Discount'
+    post:
+      tags:
+        - Discount
+      summary: Crear Política de Descuento
+      description: Crea una nueva política de descuento.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+                value:
+                  type: number
+                  format: float
+                active:
+                  type: boolean
+                start_date:
+                  type: string
+                  format: date-time
+                end_date:
+                  type: string
+                  format: date-time
+                product_ids:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Descuento creado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  discount_id:
+                    type: string
+  /discounts/{discount_id}:
+    put:
+      tags:
+        - Discount
+      summary: Actualizar Política de Descuento
+      description: Actualiza una nueva política de descuento.
+      parameters:
+        - name: discount_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID de la política de descuento que se va a actualizar.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+                value:
+                  type: number
+                  format: float
+                active:
+                  type: boolean
+                start_date:
+                  type: string
+                  format: date-time
+                end_date:
+                  type: string
+                  format: date-time
+                product_ids:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Descuento actualizado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  discount_id:
+                    type: string
+
+  /coupons:
+    get:
+      tags:
+        - Coupons
+      summary: Obtener todos los cupones
+      description: Obtener todos los cupones.
+      responses:
+        '200':
+          description: Cupones.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type:
+                  $ref: '#/components/schemas/Coupon'
+    post:
+      tags:
+        - Coupons
+      summary: Crear Cupón
+      description: Crea un nuevo cupón.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                discount_type:
+                  type: string
+                discount_value:
+                  type: number
+                  format: float
+                applicable_products:
+                  type: array
+                  items:
+                    type: string
+                minimum_purchase:
+                  type: number
+                  format: float
+                uses_limit:
+                  type: number
+                active:
+                  type: boolean
+                start_date:
+                  type: string
+                  format: date-time
+                end_date:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: Cupón creado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  coupon_id:
+                    type: string
+  /coupons/{coupon_id}:
+    put:
+      tags:
+        - Coupons
+      summary: Modificar Cupón
+      description: Modifica un cupón existente.
+      parameters:
+        - name: coupon_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID del cupón a modificar.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                discount_type:
+                  type: string
+                discount_value:
+                  type: number
+                  format: float
+                applicable_products:
+                  type: array
+                  items:
+                    type: string
+                minimum_purchase:
+                  type: number
+                  format: float
+                uses_limit:
+                  type: number
+                active:
+                  type: boolean
+                start_date:
+                  type: string
+                  format: date-time
+                end_date:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: Cupón actualizado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  coupon_id:
+                    type: string
+        '404':
+          description: Cupón no encontrado.
+  /coupons/apply:
+    post:
+      tags:
+        - Coupons
+      summary: Aplicar Cupón
+      description: Aplica un cupón a un conjunto de productos.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                product_ids:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Cupón aplicado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  applied_discount:
+                    type: number
+                    format: float
+                  final_prices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: string
+                        final_price:
+                          type: number
+                          format: float
 servers:
   - url: '{protocol}://{environment}/api/v1'
     description: Local
@@ -39,62 +434,7 @@ servers:
           - localhost:8080
         default: localhost:8080
 components:
-  responses:
-    Success:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StandardResponse'
-    Unauthorized:
-      description: Access token is missing or is invalid
-    BadRequest:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    InternalServerError:
-      description: Internal server error
   schemas:
-    Timestamp:
-      type: object
-      properties:
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
-        updated_at:
-          type: string
-          format: date-time
-          nullable: true
-        created_at:
-          type: string
-          format: date-time
-          nullable: true
-    TimestampMongo:
-      type: object
-      properties:
-        updatedAt:
-          type: string
-          format: date-time
-          nullable: true
-        createdAt:
-          type: string
-          format: date-time
-          nullable: true
-    Pagination:
-      type: object
-      properties:
-        total:
-          type: number
-          example: 9
-        page:
-          type: number
-          example: 1
-        page_size:
-          type: number
-          example: 10
     Error:
       type: object
       properties:
@@ -132,6 +472,80 @@ components:
         status:
           type: number
           example: 200
+    Price:
+      type: object
+      properties:
+        id:
+          type: string
+        product_id:
+          type: string
+        price:
+          type: number
+          format: float
+        category:
+          type: string
+    Discount:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        value:
+          type: number
+          format: float
+        active:
+          type: boolean
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        product_ids:
+          type: array
+          items:
+            type: string
+    Coupon:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        discount_type:
+          type: string
+        discount_value:
+          type: number
+          format: float
+        applicable_products:
+          type: array
+          items:
+            type: string
+        minimum_purchase:
+          type: number
+          format: float
+        uses_limit:
+          type: number
+  responses:
+    Success:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
+    Unauthorized:
+      description: Access token is missing or is invalid
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
   securitySchemes:
     bearerAuth:
       type: http
@@ -141,48 +555,3 @@ components:
       type: apiKey
       in: header
       name: X-Api-Key
-  parameters:
-    id:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: number
-    page:
-      name: page
-      in: query
-      description: Page number
-      schema:
-        type: number
-        example: 1
-    page_size:
-      name: page_size
-      in: query
-      description: Limits the number of results
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        example: 10
-    sort:
-      name: sort
-      in: query
-      description: Attribute to sort by
-      schema:
-        type: string
-        example: created_at
-    sort_dir:
-      name: sort_dir
-      in: query
-      description: Sorting direction
-      schema:
-        type: string
-        enum:
-          - ASC
-          - DESC
-        example: ASC
-    search:
-      name: search
-      in: query
-      schema:
-        type: string
