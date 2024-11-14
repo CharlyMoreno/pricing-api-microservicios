@@ -12,7 +12,7 @@ class PriceService {
     if (!price) {
       throw new CustomError('Product not found', 404);
     }
-    const { specialPrice, discounts } = await discountService.calculateDiscountToarticleId(articleId, price.price);
+    const { specialPrice, discounts } = await discountService.calculateDiscountToArticleId(articleId, price.price);
     return { ...price._doc, price_with_discount: specialPrice, discounts };
   }
 
@@ -49,7 +49,7 @@ class PriceService {
       return [];
     }
     const promises = products.map(async (p: any) => {
-      const { specialPrice, discounts } = await discountService.calculateDiscountToarticleId(p.article_id, p.price);
+      const { specialPrice, discounts } = await discountService.calculateDiscountToArticleId(p.article_id, p.price);
       return { ...p._doc, price_with_discount: specialPrice, discounts };
     });
     return Promise.all(promises);

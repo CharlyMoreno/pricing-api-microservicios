@@ -60,7 +60,7 @@ class CouponService {
       total: totalWithDiscount,
       total_with_coupon: discount,
       coupon,
-      products,
+      articles: products,
     };
   }
 

@@ -29,7 +29,7 @@ class DiscountService {
     return price;
   }
 
-  async calculateDiscountToarticleId(articleId: string, price: number) {
+  async calculateDiscountToArticleId(articleId: string, price: number) {
     const discounts = await discountRepository.getActiveDiscountByArticleId(articleId);
     if (!discounts) {
       return { specialPrice: price, discounts: [] };

@@ -10,7 +10,7 @@ class TestRoute {
   }
 
   createRoutes(): void {
-    this.router.get('/test', authMiddleware, this.handleTest.bind(this));
+    this.router.get('/test', this.handleTest.bind(this));
   }
 
   private handleTest(req: Request, res: Response, next: NextFunction) {

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import discountService from '@services/discount.service';
 import { RequestCreateDiscount, RequestUpdateDiscount } from '@dtos/discount.dto';
+import { authMiddleware } from '@middlewares/auth.middleware';
 
 class DiscountsRoute {
   public router = Router();
@@ -10,9 +11,9 @@ class DiscountsRoute {
   }
 
   createRoutes(): void {
-    this.router.get('/discounts', this.getDiscounts.bind(this));
-    this.router.post('/discounts', this.createDiscount.bind(this));
-    this.router.put('/discounts/:discount_id', this.updateDiscount.bind(this));
+    this.router.get('/discounts', authMiddleware, this.getDiscounts.bind(this));
+    this.router.post('/discounts', authMiddleware, this.createDiscount.bind(this));
+    this.router.put('/discounts/:discount_id', authMiddleware, this.updateDiscount.bind(this));
   }
 
   private getDiscounts(req: Request, res: Response, next: NextFunction) {

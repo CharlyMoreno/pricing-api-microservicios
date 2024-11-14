@@ -22,7 +22,6 @@ class DiscountRepository {
     return ModelDiscount.find({
       $and: [
         { article_ids: { $in: [articleId] } },
-        { active: true },
         { start_date: { $lte: today } },
         { end_date: { $gte: today } },
       ],

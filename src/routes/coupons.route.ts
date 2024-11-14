@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import testService from '@services/test.service';
 import { RequestApplyCoupon, RequestCreateCoupon, RequestUpdateCoupon } from '@dtos/coupon.dto';
 import couponService from '@services/coupon.service';
+import { authMiddleware } from '@middlewares/auth.middleware';
 
 class CouponsRoute {
   public router = Router();
@@ -11,10 +12,10 @@ class CouponsRoute {
   }
 
   createRoutes(): void {
-    this.router.get('/coupons', this.getAllCoupons.bind(this));
-    this.router.post('/coupons', this.createCoupon.bind(this));
-    this.router.put('/coupons/:coupon_id', this.updateCoupon.bind(this));
-    this.router.post('/coupons/apply', this.applyCoupon.bind(this));
+    this.router.get('/coupons', authMiddleware, this.getAllCoupons.bind(this));
+    this.router.post('/coupons', authMiddleware, this.createCoupon.bind(this));
+    this.router.put('/coupons/:coupon_id', authMiddleware, this.updateCoupon.bind(this));
+    this.router.post('/coupons/apply', authMiddleware, this.applyCoupon.bind(this));
   }
 
   private getAllCoupons(req: Request, res: Response, next: NextFunction) {

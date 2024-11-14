@@ -20,7 +20,6 @@ class CouponRepository {
     const today = new Date();
     return ModelCoupon.findOne({
       code,
-      active: true,
       start_date: { $lte: today },
       end_date: { $gte: today },
     });
