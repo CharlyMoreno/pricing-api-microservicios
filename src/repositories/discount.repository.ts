@@ -17,11 +17,11 @@ class DiscountRepository {
     return ModelDiscount.findOneAndUpdate({ _id: discountId }, payload, { new: true });
   }
 
-  async getActiveDiscountByProductId(productId: string) {
+  async getActiveDiscountByArticleId(articleId: string) {
     const today = new Date();
     return ModelDiscount.find({
       $and: [
-        { product_ids: { $in: [productId] } },
+        { article_ids: { $in: [articleId] } },
         { active: true },
         { start_date: { $lte: today } },
         { end_date: { $gte: today } },

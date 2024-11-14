@@ -18,5 +18,5 @@ export interface RequestUpdateCoupon extends Request {
 
 export interface ApplyCoupon {
   code: string;
-  product_ids: string[];
+  article_ids: string[];
 }

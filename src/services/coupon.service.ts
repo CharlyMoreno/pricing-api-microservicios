@@ -32,21 +32,21 @@ class CouponService {
   }
 
   async applyCoupon(payload: ApplyCoupon) {
-    const { code, product_ids } = payload;
+    const { code, article_ids } = payload;
     const coupon = await couponRepository.getActiveCoupon(code);
 
     if (!coupon) {
       throw new CustomError('Invalid or inactive coupon or outside the date range', 400);
     }
 
-    if (coupon.applicable_products && !product_ids.every((id) => coupon.applicable_products?.includes(id))) {
+    if (coupon.applicable_products && !article_ids.every((id) => coupon.applicable_products?.includes(id))) {
       throw new CustomError('Coupon is not valid for one or more selected products', 400);
     }
 
-    const products = await priceService.getManyProducts(product_ids);
-    const total = this.calculateTotalPurchase(products);
+    const products = await priceService.getManyProducts(article_ids);
+    const {totalWithDiscount,total} = this.calculateTotalPurchase(products);
 
-    if (coupon.minimum_purchase && total < coupon.minimum_purchase) {
+    if (coupon.minimum_purchase && totalWithDiscount < coupon.minimum_purchase) {
       throw new CustomError('Total purchase amount is below the minimum required', 400);
     }
 
@@ -54,17 +54,23 @@ class CouponService {
     if (usage.length >= coupon.uses_limit) {
       throw new CustomError('Coupon usage limit exceeded', 400);
     }
-    const discount = this.calculateDiscount(coupon, total);
+    const discount = this.calculateDiscount(coupon, totalWithDiscount);
     return {
       subtotal: total,
-      total: discount,
+      total: totalWithDiscount,
+      total_with_coupon: discount,
       coupon,
       products,
     };
   }
 
   private calculateTotalPurchase(products: PriceWithSpecialPrice[]) {
-    return products.reduce((total, product) => total + (product.special_price || 0), 0);
+    const totalWithDiscount = products.reduce(
+      (totalWithDiscount, product) => totalWithDiscount + (product.price_with_discount || 0),
+      0
+    );
+    const total = products.reduce((total, product) => total + (product.price || 0), 0);
+    return { totalWithDiscount, total };
   }
 
   private calculateDiscount(coupon: Coupon, totalPurchase: number): number {

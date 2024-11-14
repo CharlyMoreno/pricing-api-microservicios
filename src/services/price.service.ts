@@ -4,21 +4,36 @@ import priceRepository from '@repositories/price.repository';
 import { UpdatePrice } from '@dtos/prices.dto';
 import discountService from './discount.service';
 import { Rabbit } from 'src/rabbitmq/rabbit.server';
+import moment from 'moment';
 
 class PriceService {
-  async getPriceByProduct(productId: string) {
-    const price: any = await priceRepository.getPriceByProduct(productId);
+  async getPriceByProduct(articleId: string) {
+    const price: any = await priceRepository.getPriceByProduct(articleId);
     if (!price) {
       throw new CustomError('Product not found', 404);
     }
-    const { specialPrice, discounts } = await discountService.calculateDiscountToProductId(productId, price.price);
-    return { ...price._doc, special_price: specialPrice, discounts };
+    const { specialPrice, discounts } = await discountService.calculateDiscountToarticleId(articleId, price.price);
+    return { ...price._doc, price_with_discount: specialPrice, discounts };
   }
 
-  async createPrice(payload: Price) {
-    const existPrice = await priceRepository.getPriceByProduct(payload.product_id);
+  private validateDateRange(start_date: Date, end_date: Date) {
+    const today = moment();
+    if (start_date && end_date) {
+      const startDate = moment(start_date);
+      const endDate = moment(end_date);
+      if (!today.isBetween(startDate, endDate, undefined, '[]')) {
+        throw new CustomError('The current date is not within the allowed range', 400);
+      }
+    } else {
+      throw new CustomError('start_date and end_date are required', 400);
+    }
+  }
+
+  async createUpdatePrice(payload: Price) {
+    this.validateDateRange(payload.start_date, payload.end_date);
+    const existPrice = await priceRepository.getPriceByProduct(payload.article_id);
     if (existPrice) {
-      throw new CustomError('Product ID already exists with a price', 400);
+      await priceRepository.updateById(existPrice._id, { end_date: new Date() });
     }
     if (!payload.price) {
       throw new CustomError('Price is required', 400);
@@ -28,32 +43,14 @@ class PriceService {
     return priceCreated;
   }
 
-  async updatePrice(productId: string, payload: UpdatePrice) {
-    const price = await priceRepository.getPriceByProduct(productId);
-    if (!price) {
-      throw new CustomError('Product not found', 404);
-    }
-    const priceUpdated = await priceRepository.updateByProductId(productId, payload);
-    await Rabbit.getInstance().sendMessage(priceUpdated);
-    return priceUpdated;
-  }
-
-  async deletePrice(productId: string) {
-    const price = await priceRepository.getPriceByProduct(productId);
-    if (!price) {
-      throw new CustomError('Product not found', 404);
-    }
-    return priceRepository.deleteByProductId(productId);
-  }
-
-  async getManyProducts(productIds: string[]) {
-    const products = await priceRepository.getManyProducts(productIds);
+  async getManyProducts(articleIds: string[]) {
+    const products = await priceRepository.getManyProducts(articleIds);
     if (!products) {
       return [];
     }
     const promises = products.map(async (p: any) => {
-      const { specialPrice, discounts } = await discountService.calculateDiscountToProductId(p.product_id, p.price);
-      return { ...p._doc, special_price: specialPrice, discounts };
+      const { specialPrice, discounts } = await discountService.calculateDiscountToarticleId(p.article_id, p.price);
+      return { ...p._doc, price_with_discount: specialPrice, discounts };
     });
     return Promise.all(promises);
   }

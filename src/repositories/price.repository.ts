@@ -3,9 +3,12 @@ import ModelPrice from '@models/price';
 import { UpdatePrice } from '@dtos/prices.dto';
 
 class PriceRepository {
-  async getPriceByProduct(productId: string) {
+  async getPriceByProduct(articleId: string) {
+    const today = new Date();
     return ModelPrice.findOne({
-      product_id: productId,
+      article_id: articleId,
+      start_date: { $lte: today },
+      end_date: { $gte: today },
     });
   }
 
@@ -13,16 +16,21 @@ class PriceRepository {
     return ModelPrice.create(payload);
   }
 
-  async updateByProductId(productId: string, payload: UpdatePrice) {
-    return ModelPrice.findOneAndUpdate({ product_id: productId }, payload, { new: true });
+  async updateById(id: any, payload: UpdatePrice) {
+    return ModelPrice.updateOne({ _id: id }, payload, { new: true });
   }
 
-  async deleteByProductId(productId: string) {
-    return ModelPrice.findOneAndDelete({ product_id: productId });
+  async updateByarticleId(articleId: string, payload: UpdatePrice) {
+    return ModelPrice.findOneAndUpdate({ article_id: articleId }, payload, { new: true });
   }
 
-  async getManyProducts(productIds: string[]) {
-    return ModelPrice.find({ product_id: { $in: productIds } });
+  async deleteByarticleId(articleId: string) {
+    return ModelPrice.findOneAndDelete({ article_id: articleId });
+  }
+
+  async getManyProducts(articleIds: string[]) {
+    const today = new Date();
+    return ModelPrice.find({ article_id: { $in: articleIds }, start_date: { $lte: today }, end_date: { $gte: today } });
   }
 }
 

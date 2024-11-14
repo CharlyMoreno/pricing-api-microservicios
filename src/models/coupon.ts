@@ -28,10 +28,6 @@ export const CouponSchema = new Schema<CouponDocument>(
       type: Number,
       required: true,
     },
-    active: {
-      type: Boolean,
-      required: true,
-    },
     start_date: {
       type: Date,
       required: true,

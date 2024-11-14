@@ -9,7 +9,6 @@ export interface Coupon {
   applicable_products?: string[];
   minimum_purchase?: number;
   uses_limit: number;
-  active: boolean;
   start_date: Date;
   end_date: Date;
 }
