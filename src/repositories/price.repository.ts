@@ -8,7 +8,7 @@ class PriceRepository {
     return ModelPrice.findOne({
       article_id: articleId,
       start_date: { $lte: today },
-      end_date: { $gte: today },
+      end_date: { $eq: null },
     });
   }
 
@@ -30,7 +30,7 @@ class PriceRepository {
 
   async getManyProducts(articleIds: string[]) {
     const today = new Date();
-    return ModelPrice.find({ article_id: { $in: articleIds }, start_date: { $lte: today }, end_date: { $gte: today } });
+    return ModelPrice.find({ article_id: { $in: articleIds }, start_date: { $lte: today }, end_date: { $eq: null } });
   }
 }
 

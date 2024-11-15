@@ -4,13 +4,13 @@
 1. [Test API](#test-api)
 2. [Crear Precio de Producto](#crear-precio-de-producto)
 3. [Consultar Precio de Producto](#consultar-precio-de-producto)
+10.[Calcular el precio con cupon](#calcular-total-con-cupon)
 4. [Obtener todos los Descuentos](#obtener-todos-los-descuentos)
 5. [Crear Política de Descuento](#crear-política-de-descuento)
 6. [Actualizar Política de Descuento](#actualizar-política-de-descuento)
 7. [Obtener todos los Cupones](#obtener-todos-los-cupones)
 8. [Crear Cupón](#crear-cupón)
 9. [Modificar Cupón](#modificar-cupón)
-10. [Aplicar Cupón](#aplicar-cupón)
 
 ---
 
@@ -45,8 +45,6 @@ Crea el precio de un producto.
 {
   "article_id": "string",
   "price": 100.00,
-  "start_date": "2024-11-10T21:07:49.125Z",
-  "end_date": "2024-11-16T21:07:49.125Z"
 }
 ```
 
@@ -59,7 +57,6 @@ Crea el precio de un producto.
     "article_id": "2",
     "price": 9890,
     "start_date": "2024-11-10T21:07:49.125Z",
-    "end_date": "2024-11-16T21:07:49.125Z",
     "createdAt": "2024-11-14T21:15:00.294Z",
     "updatedAt": "2024-11-14T21:15:00.294Z"
   }
@@ -95,6 +92,31 @@ Devuelve el precio actual de un producto específico.
 
 - `404 Not Found`: Producto no encontrado.
 
+---
+
+### Calcular total con cupon
+
+`POST /api/prices/coupon`
+
+Calcula el precio con cupon.
+
+#### Headers
+| Cabecera                     | Contenido           |
+|------------------------------|---------------------|
+| `Authorization: Bearer xxx`  | Token en formato JWT |
+
+#### Body
+```json
+{
+  "code": "CUPONMODIFICADO",
+  "products": [
+    {
+      "article_id": "1",
+      "price": 100
+    }
+  ]
+}
+```
 ---
 
 ### Obtener todos los Descuentos
@@ -316,31 +338,6 @@ Modifica un cupón existente.
 
 ---
 
-### Aplicar Cupón
-
-`POST /api/coupons/apply`
-
-Aplica un cupón a un conjunto
-
- de productos.
-
-#### Headers
-| Cabecera                     | Contenido           |
-|------------------------------|---------------------|
-| `Authorization: Bearer xxx`  | Token en formato JWT |
-
-#### Body
-```json
-{
-  "code": "CUPONMODIFICADO",
-  "products": [
-    {
-      "article_id": "1",
-      "price": 100
-    }
-  ]
-}
-```
 
 #### Respuesta
 

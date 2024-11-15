@@ -15,7 +15,7 @@ class CouponsRoute {
     this.router.get('/coupons', authMiddleware, this.getAllCoupons.bind(this));
     this.router.post('/coupons', authMiddleware, this.createCoupon.bind(this));
     this.router.put('/coupons/:coupon_id', authMiddleware, this.updateCoupon.bind(this));
-    this.router.post('/coupons/apply', authMiddleware, this.applyCoupon.bind(this));
+    this.router.post('/prices/coupon', authMiddleware, this.applyCoupon.bind(this));
   }
 
   private getAllCoupons(req: Request, res: Response, next: NextFunction) {
