@@ -17,7 +17,7 @@ export const PriceSchema = new Schema(
     },
     end_date: {
       type: Date,
-      required: true,
+      required: false,
     },
   },
   {

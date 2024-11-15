@@ -30,11 +30,12 @@ class PriceService {
   }
 
   async createUpdatePrice(payload: Price) {
-    this.validateDateRange(payload.start_date, payload.end_date);
+    // this.validateDateRange(payload.start_date, payload.end_date);
     const existPrice = await priceRepository.getPriceByProduct(payload.article_id);
     if (existPrice) {
       await priceRepository.updateById(existPrice._id, { end_date: new Date() });
     }
+    payload.start_date = new Date();
     if (!payload.price) {
       throw new CustomError('Price is required', 400);
     }

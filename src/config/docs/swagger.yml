@@ -40,12 +40,6 @@ paths:
                 price:
                   type: number
                   format: float
-                start_date:
-                  type: string
-                  format: date-time
-                end_date:
-                  type: string
-                  format: date-time
       responses:
         '200':
           description: Precio actualizado correctamente.
@@ -336,10 +330,10 @@ paths:
                     type: string
         '404':
           description: Cupón no encontrado.
-  /coupons/apply:
+  /prices/coupon:
     post:
       tags:
-        - Coupons
+        - Price
       summary: Aplicar Cupón
       description: Aplica un cupón a un conjunto de productos.
       security:
